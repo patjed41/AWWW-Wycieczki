@@ -1,0 +1,109 @@
+body
+{
+  background-color: #fffde3;
+}
+
+header
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: lightblue;
+  border-style: dotted;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 20px;
+  font-size: 20px;
+  margin: -8px;
+  margin-bottom: 10px;
+}
+
+footer
+{
+  clear: both;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: yellow;
+  margin: -8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-style: dotted;
+}
+
+#container-wycieczka
+{
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 40px;
+}
+
+.h1
+{
+  font-family: Arial, sans-serif;
+}
+
+.h2
+{
+  font-family: Arial, sans-serif;
+}
+
+.h3
+{
+  font-family: Arial, sans-serif;
+}
+
+#obrazek
+{
+  float: left;
+  height: 185px;
+  width: 300px;
+}
+
+#istotne-informacje
+{
+  list-style: none;
+  margin-left: -20px
+}
+
+#powrot-div
+{
+  width: 120px;
+  padding: 10px;
+  float: left;
+  border-style: solid;
+  margin-bottom: 10px;
+}
+
+#zarezerwuj-div
+{
+  width: 120px;
+  padding: 10px;
+  float: right;
+  border-style: solid;
+  margin-bottom: 10px;
+}
+
+#powrot-div:hover
+{
+  background-color: #fff78c;
+}
+
+#zarezerwuj-div:hover
+{
+  background-color: #fff78c;
+}
+
+.link-wycieczka
+{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+#obrazek
+{
+  margin-right: 40px;
+  margin-bottom: 20px;
+}

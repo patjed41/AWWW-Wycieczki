@@ -1,0 +1,33 @@
+extends layout.pug
+
+block scripts
+  link(rel='stylesheet' href='style/style-wycieczka.css' type='text/css')
+
+block content
+  #container-wycieczka
+    img#obrazek(src=trip.picture alt=':(')
+    h1 Wspania&lstrok;a wycieczka
+    p= trip.desc0
+    h2= trip.name
+    p= trip.desc1
+    p= trip.desc2
+    h2 Dodatkowe informacje
+    p= trip.additionalInfo
+    h2 Istotne informacje
+    ul#istotne-informacje
+      li - termin wycieczki: #{trip.time}
+      li - temperatury w miejscu docelowym: #{trip.temperature}
+      li - warto zabra&cacute;: #{trip.goodToTake}
+      li - cena wycieczki to: #{trip.price}
+    h2 Program wycieczki
+    ol
+      each stage in trip.program
+        li= stage
+    #powrot-div
+      a.link-wycieczka(href='/index') &lt; Powr&oacute;t
+    #zarezerwuj-div
+      a.link-wycieczka(href='/form') Zarezerwuj &gt;
+
+block invisible
+  script.
+    document.getElementsByClassName('header-opcja')[1].style.color = '#09008d';

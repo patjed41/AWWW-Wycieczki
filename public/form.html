@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8"/>
+  <title>Wycieczki</title>
+  <link rel="stylesheet" href="style/style-index.css" type="text/css"/>
+  <link rel="stylesheet" href="style/style-form.css" type="text/css"/>
+
+  <script type="module">
+    import {komunikat} from './js/modul.mjs';
+    
+    console.log(komunikat);
+  </script>
+
+  <script defer src="js/validate-form.js"></script>  
+</head>
+<body onload="console.log('body');">
+  <header>
+    <div class="header-tile">
+      <img src="pictures/logo.png" alt=":("/>
+    </div>
+    
+    <a>Wycieczki lotnicze</a>
+    <a>Wycieczki autokarowe</a>
+    <a>...</a>
+    <a>Moje konto</a>
+  </header>
+
+  <div id="form-container">
+    <div id="form-div">
+      <form id="zakup-wycieczki" name="zakup-wycieczki" action="" method="post">
+        <label class="dane-klienta">
+          <input type="text" name="imie">
+          Imię
+          <span class="form-komunikat"> - jest wymagane</span>
+          <span class="form-komunikat"> - za długie</span>
+        </label>
+        <label class="dane-klienta">
+          <input type="text" name="nazwisko">
+          Nazwisko
+          <span class="form-komunikat"> - jest wymagane</span>
+          <span class="form-komunikat"> - za długie</span>
+        </label>
+
+        <label class="miejsce-wycieczki">
+          <input type="radio" name="opcja-wycieczki" value="Góry">
+          Góry - 10 zł
+        </label>
+        <label class="miejsce-wycieczki">
+          <input type="radio" name="opcja-wycieczki" value="Morze">
+          Morze - 20 zł
+        </label>
+        <label class="miejsce-wycieczki">
+          <input type="radio" name="opcja-wycieczki" value="Miasto">
+          Miasto - 30 zł
+        </label>
+
+        <label id ="ile-wycieczek-label">
+          <input type="number" name="ile-wycieczek">
+          Ilość
+        </label>
+
+        <label>
+          <input type="submit" value="Zamów"/>
+        </label>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>Biruo podróży, 2022</p>
+    <p>O firmie</p>
+    <p>Polityka prywatności</p>
+    <p>Kontakt</p>
+  </footer>
+
+  <div id="okModal" class="modal">
+    <div class="modal-content">
+      <span class="close">Ok</span>
+      <p class="modal-text"></p>
+    </div>
+  </div>
+  <script>
+    console.log("komunikat");
+  </script>
+</body>
+</html>

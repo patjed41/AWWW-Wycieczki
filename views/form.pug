@@ -1,0 +1,48 @@
+extends layout.pug
+
+block scripts
+  link(rel='stylesheet' href='style/style-index.css' type='text/css')
+  link(rel='stylesheet' href='style/style-form.css' type='text/css')
+  script(type='module').
+    import {komunikat} from './js/modul.mjs';
+    console.log(komunikat);
+  script(defer='' src='js/validate-form.js')
+
+block content
+  #form-container
+    #form-div
+      form#zakup-wycieczki(name='zakup-wycieczki' action='' method='post')
+        label.dane-klienta
+          input(type='text' name='imie')
+          |           Imi&eogon;
+          span.form-komunikat  - jest wymagane
+          span.form-komunikat  - za d&lstrok;ugie
+        label.dane-klienta
+          input(type='text' name='nazwisko')
+          |           Nazwisko
+          span.form-komunikat  - jest wymagane
+          span.form-komunikat  - za d&lstrok;ugie
+        label.miejsce-wycieczki
+          input(type='radio' name='opcja-wycieczki' value='Góry')
+          |           G&oacute;ry - 10 z&lstrok;
+        label.miejsce-wycieczki
+          input(type='radio' name='opcja-wycieczki' value='Morze')
+          |           Morze - 20 z&lstrok;
+        label.miejsce-wycieczki
+          input(type='radio' name='opcja-wycieczki' value='Miasto')
+          |           Miasto - 30 z&lstrok;
+        label#ile-wycieczek-label
+          input(type='number' name='ile-wycieczek')
+          |           Ilo&sacute;&cacute;
+        label
+          input(type='submit' value='Zamów')
+
+block invisible
+  #okModal.modal
+    .modal-content
+      span.close Ok
+      p.modal-text
+  script.
+    console.log("komunikat");
+  script.
+    document.getElementsByClassName('header-opcja')[2].style.color = '#09008d';

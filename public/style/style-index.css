@@ -1,0 +1,178 @@
+body
+{
+  background-color: #fffde3;
+}
+
+header
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: lightblue;
+  border-style: dotted;
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 20px;
+  font-size: 20px;
+  margin: -8px;
+  margin-bottom: 10px;
+}
+
+footer
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: yellow;
+  margin: -8px;
+  margin-top: 12px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-style: dotted;
+}
+
+#container
+{
+  display: grid;
+  grid-template-columns: auto 180px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "wycieczka1 right"
+    "wycieczka2 right"
+    "wycieczka3 right"
+    ". right";
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 870px)
+{
+  #container
+  {
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-areas:
+      "wycieczka1"
+      "wycieczka2"
+      "wycieczka3"
+      "right";
+  }
+
+  #porady
+  {
+    display: none;
+  }
+}
+
+#wycieczka1
+{
+  grid-area: wycieczka1;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#wycieczka2
+{
+  grid-area: wycieczka2;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#wycieczka3
+{
+  grid-area: wycieczka3;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#right
+{
+  grid-area: right;
+}
+
+.h1
+{
+  font-family: Arial, sans-serif;
+}
+
+.h2
+{
+  font-family: Arial, sans-serif;
+}
+
+.h3
+{
+  font-family: Arial, sans-serif;
+}
+
+.obrazek
+{
+  float: left;
+  width: 250px;
+  height: 180px;
+  margin-right: 30px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.wycieczka-teskt
+{
+  float: left;
+  width: 100%;
+}
+
+.wycieczka-opis
+{
+  font-size: 22px;
+}
+
+.wycieczka-zarezerwuj
+{
+  float: right;
+  color: blue;
+  font-size: 18px;
+  margin-right: 80px;
+}
+
+.promocja-nazwa
+{
+  margin-left: 20px;
+}
+
+.promocja-tekst
+{
+  margin-left: 40px;
+}
+
+.porada-szara
+{
+  display: inline-block;
+  width: 160px;
+  height: 55px;
+  font-size: 17px;
+  background-color: #dbdbdb;
+  border-style: dotted;
+  padding-left: 10px;
+  padding-top: 15px;
+}
+
+.porada-szara:hover
+{
+  background-color: grey;
+}
+
+.porada-biala
+{
+  display: inline-block;
+  width: 160px;
+  height: 55px;
+  font-size: 17px;
+  padding-left: 10px;
+  padding-top: 15px;
+}
+
+.porada-biala:hover
+{
+  background-color: #dbdbdb;
+}
