@@ -29,7 +29,6 @@ closeSpan.onclick = closeOkModal;
 function validateForm(event) {
     const name = document.forms['zakup-wycieczki']['imie'].value;
     const surname = document.forms['zakup-wycieczki']['nazwisko'].value;
-    const journey = document.forms['zakup-wycieczki']['opcja-wycieczki'].value;
     const count = document.forms['zakup-wycieczki']['ile-wycieczek'].value;
 
     let correct = true;
@@ -76,7 +75,7 @@ function validateForm(event) {
     event.preventDefault();
     if (correct) {
         okModal.style.display = 'block';
-        const modalInfo = `imię - ${name}, nazwisko - ${surname}, miejsce wycieczki - ${journey}, ilość - ${count}`;
+        const modalInfo = `imię - ${name}, nazwisko - ${surname}, ilość - ${count}`;
         document.getElementsByClassName('modal-text')[0].innerHTML = modalInfo;
         const closeOkModalTimeout = setTimeout(closeOkModal, 5000);
     }

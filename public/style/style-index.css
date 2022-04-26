@@ -40,6 +40,7 @@ footer
     "wycieczka1 right"
     "wycieczka2 right"
     "wycieczka3 right"
+    "do-innych right"
     ". right";
   max-width: 1200px;
   margin-left: auto;
@@ -56,6 +57,7 @@ footer
       "wycieczka1"
       "wycieczka2"
       "wycieczka3"
+      "do-innych"
       "right";
   }
 
@@ -84,6 +86,53 @@ footer
   grid-area: wycieczka3;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+#do-innych
+{
+  grid-area: do-innych;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.do-poprzednich
+{
+  text-decoration: none;
+  text-align: center;
+  font-size: 40px;
+  color: black;
+  float: left;
+  width: 100px;
+  height: 50px;
+  border: solid;
+  border-color: black;
+  border-radius: 7px;
+  margin-left: 20%;
+}
+
+.do-poprzednich:hover
+{
+  background-color: yellow;
+}
+
+.do-nastepnych
+{
+  text-decoration: none;
+  text-align: center;
+  font-size: 40px;
+  color: black;
+  float: right;
+  width: 100px;
+  height: 50px;
+  border: solid;
+  border-color: black;
+  border-radius: 7px;
+  margin-right: 20%;
+}
+
+.do-nastepnych:hover
+{
+  background-color: yellow;
 }
 
 #right
@@ -127,12 +176,32 @@ footer
   font-size: 22px;
 }
 
+.wycieczka-do-opisu
+{
+  text-decoration: none;
+  color: black;
+  font-size: 40px;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+}
+
+.wycieczka-do-opisu:hover
+{
+  color: blue;
+}
+
 .wycieczka-zarezerwuj
 {
   float: right;
   color: blue;
   font-size: 18px;
   margin-right: 80px;
+  text-decoration: none;
+}
+
+.wycieczka-zarezerwuj:hover
+{
+  color: #880094;
 }
 
 .promocja-nazwa

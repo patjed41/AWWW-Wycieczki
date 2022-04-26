@@ -24,9 +24,9 @@ block content
       each stage in trip.program
         li= stage
     #powrot-div
-      a.link-wycieczka(href='/index') &lt; Powr&oacute;t
+      a.link-wycieczka(href=`/index?grupa=${Math.floor(trip.id / 3)}`) &lt; Powr&oacute;t
     #zarezerwuj-div
-      a.link-wycieczka(href='/form') Zarezerwuj &gt;
+      a.link-wycieczka(href=`/form?wycieczkaId=${trip.id}`) Zarezerwuj &gt;
 
 block invisible
   script.

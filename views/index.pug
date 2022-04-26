@@ -11,11 +11,15 @@ block content
       div(id = tripDivs[tripDivIndex])
         .wycieczka-teskt
           img.obrazek(src=trip.picture alt=':(')
-          h1= trip.name
+          a.wycieczka-do-opisu(href=`/wycieczka?wycieczkaId=${trip.id}`) #{trip.name}
           p.wycieczka-opis= trip.description
           |         Cena: #{trip.price}
-          a.wycieczka-zarezerwuj Zarezerwuj &gt;&gt;
+          a.wycieczka-zarezerwuj(href=`/form?wycieczkaId=${trip.id}`) Zarezerwuj &gt;&gt;
       - tripDivIndex = (tripDivIndex + 1) % 3;
+    - if (groups > 1)
+      #do-innych
+        a.do-poprzednich(href=`/index?grupa=${Math.floor((group - 1 + groups) % groups)}`) &lt;
+        a.do-nastepnych(href=`/index?grupa=${Math.floor((group + 1) % groups)}`) &gt;
     #right
       #promocje
         h2 Promocje

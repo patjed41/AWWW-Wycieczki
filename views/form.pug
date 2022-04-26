@@ -10,6 +10,7 @@ block scripts
 
 block content
   #form-container
+    h2 #{trip.name} - #{trip.price} zł
     #form-div
       form#zakup-wycieczki(name='zakup-wycieczki' action='' method='post')
         label.dane-klienta
@@ -22,15 +23,6 @@ block content
           |           Nazwisko
           span.form-komunikat  - jest wymagane
           span.form-komunikat  - za d&lstrok;ugie
-        label.miejsce-wycieczki
-          input(type='radio' name='opcja-wycieczki' value='Góry')
-          |           G&oacute;ry - 10 z&lstrok;
-        label.miejsce-wycieczki
-          input(type='radio' name='opcja-wycieczki' value='Morze')
-          |           Morze - 20 z&lstrok;
-        label.miejsce-wycieczki
-          input(type='radio' name='opcja-wycieczki' value='Miasto')
-          |           Miasto - 30 z&lstrok;
         label#ile-wycieczek-label
           input(type='number' name='ile-wycieczek')
           |           Ilo&sacute;&cacute;
