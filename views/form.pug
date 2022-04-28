@@ -1,12 +1,9 @@
 extends layout.pug
 
 block scripts
-  link(rel='stylesheet' href='style/style-index.css' type='text/css')
-  link(rel='stylesheet' href='style/style-form.css' type='text/css')
-  script(type='module').
-    import {komunikat} from './js/modul.mjs';
-    console.log(komunikat);
-  script(defer='' src='js/validate-form.js')
+  link(rel='stylesheet' href='style-index.css' type='text/css')
+  link(rel='stylesheet' href='style-form.css' type='text/css')
+  script(defer='' src='validate-form.js')
 
 block content
   #form-container
@@ -34,7 +31,5 @@ block invisible
     .modal-content
       span.close Ok
       p.modal-text
-  script.
-    console.log("komunikat");
   script.
     document.getElementsByClassName('header-opcja')[2].style.color = '#09008d';

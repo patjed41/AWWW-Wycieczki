@@ -5,14 +5,16 @@ const port = 8080;
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.use(express.static('public'));
+app.use(express.static('style'));
+app.use(express.static('pictures'));
+app.use(express.static('js'));
 
 const trip0 = {
   id: 0,
   name: 'Szczyt wszystkiego',
   description: 'Krótka wycieczka z wejściem na ten właśnie szczyt.',
   price: '15002900',
-  picture: 'pictures/szczyt-wszystkiego.jpg'
+  picture: 'szczyt-wszystkiego.jpg'
 }
 
 const trip1 = {
@@ -20,7 +22,7 @@ const trip1 = {
   name: 'Dalekie morza',
   description: 'Mórz jest wiele, więc i opis może być nieco dłuższy niż poprzednio. Atrakcji też może być więcej.',
   price: '17',
-  picture: 'pictures/dalekie-morza.jpg'
+  picture: 'dalekie-morza.jpg'
 }
 
 const trip2 = {
@@ -28,7 +30,7 @@ const trip2 = {
   name: 'Miasto',
   description: 'Na świecie mamy jeszcze miasta, można je zwiedzać.',
   price: '3405691582',
-  picture: 'pictures/city.jpeg'
+  picture: 'city.jpeg'
 }
 
 const trip3 = {
@@ -36,7 +38,7 @@ const trip3 = {
   name: 'Pustynia',
   description: 'Niezapomniana przejażdżka wielbłądem po Saharze.',
   price: '1234',
-  picture: 'pictures/pustynia.jpeg'
+  picture: 'pustynia.jpeg'
 }
 
 const trip4 = {
@@ -44,7 +46,7 @@ const trip4 = {
   name: 'Rejs do okoła świata',
   description: 'Wodaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.',
   price: '891839',
-  picture: 'pictures/rejs.jpeg'
+  picture: 'rejs.jpeg'
 }
 
 const trip5 = {
@@ -52,7 +54,7 @@ const trip5 = {
   name: 'Wyprawa na Biegun Południowy',
   description: 'Długa i mroźna przygoda po Antarktydzie.',
   price: '10101',
-  picture: 'pictures/antarktyda.jpg'
+  picture: 'antarktyda.jpg'
 }
 
 const trip6 = {
@@ -60,7 +62,7 @@ const trip6 = {
   name: 'Tratwą po Amazonii.',
   description: 'Owady, węże, krokodyle i ukrop nie do zniesienia.',
   price: '9182',
-  picture: 'pictures/amazonia.jpeg'
+  picture: 'amazonia.jpeg'
 }
 
 const trip7 = {
@@ -68,7 +70,7 @@ const trip7 = {
   name: 'Lot w kosmos.',
   description: 'Spędzenie niezapomnianej chwili na orbicie.',
   price: '999999',
-  picture: 'pictures/orbita.webp'
+  picture: 'orbita.webp'
 }
 
 const trips = [trip0, trip1, trip2, trip3, trip4, trip5, trip6, trip7];
@@ -252,24 +254,11 @@ app.get('/wycieczka', (req, res) => {
   res.render('wycieczka', { trip: fullDescriptions[id] });
 })
 
-
 app.get('/form', (req, res) => {
   const id = checkTripId(req, res);
 
   res.render('form', { trip: trips[id] });
 })
-
-app.get('/layout', (req, res) => {
-  res.render('layout');
-})
-
-/*app.get('/wycieczka/:wycieczkaNr/tydzien/:wycieczkaTydzien', (req, res) => {
-  res.send(`wycieczka nr ${req.params['wycieczkaNr']} w tygodniu ${req.params['wycieczkaTydzien']}`);
-})
-
-app.get('/wycieczka-q', (req, res) => {
-  res.send(`wycieczka nr ${req.query.nr} w tygodniu ${req.query.tydzien}`);
-})*/
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
