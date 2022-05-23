@@ -21,8 +21,9 @@ block content
       li - cena wycieczki to: #{trip.price}
     h2 Program wycieczki
     ol
-      each stage in trip.program
-        li= stage
+      li= trip.program1
+      li= trip.program2
+      li= trip.program3
     #powrot-div
       a.link-wycieczka(href=`/index?grupa=${Math.floor(trip.id / 3)}`) &lt; Powr&oacute;t
     #zarezerwuj-div

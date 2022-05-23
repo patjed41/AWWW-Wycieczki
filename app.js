@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const app = express();
 const port = 8080;
 
@@ -8,6 +8,41 @@ app.set('views', './views');
 app.use(express.static('style'));
 app.use(express.static('pictures'));
 app.use(express.static('js'));
+
+import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie } from './js/database.mjs';
+import { Op } from 'sequelize';
+
+await checkConnectionWithDatabase();
+
+async function getAvailableTrips() {
+  const trips = await Wycieczka.findAll({
+    where: {
+      end_date: {
+        [Op.gt]: "2022-01-02T00:00:00.000Z"
+      }
+    },
+    order: ['begin_date']
+  });
+
+  return trips;
+}
+
+async function getAvailableTrip(id) {
+  const trips = await Wycieczka.findAll({
+    where: {
+      end_date: {
+        [Op.gt]: "2022-01-02T00:00:00.000Z"
+      },
+      id: id
+    }
+  });
+
+  if (trips.length == 0) {
+    return null;
+  }
+
+  return trips[0];
+}
 
 const trip0 = {
   id: 0,
@@ -216,7 +251,7 @@ app.get('/data', (req, res) => {
   res.status(200).send(res.locals.dateInfo);
 })
 
-function checkGroup(req, res) {
+function checkGroup(req, res, groups) {
   if (req.query.grupa === undefined) {
     res.status(404).send('No trip group.');
   }
@@ -235,29 +270,39 @@ function checkTripId(req, res) {
   }
 
   const id = parseInt(req.query.wycieczkaId);
-  if (id < 0 || id >= trips.length) {
+  if (id <= 0) {
     res.status(404).send('Wrong trip ID.');
   }
 
   return id;
 }
 
-app.get('/index', (req, res) => {
-  const group = checkGroup(req, res);
-
-  res.render('index', { trips: trips.slice(group * 3, group * 3 + 3), group: group, groups: groups });
+app.get('/index', async (req, res) => {
+  const available_trips = await getAvailableTrips();
+  const groups = Math.max(Math.floor((available_trips.length + 2) / 3), 1);
+  const group = checkGroup(req, res, groups);
+  const trips_to_render = available_trips.slice(group * 3, group * 3 + 3);
+  res.render('index', { trips: trips_to_render, group: group, groups: groups });
 })
 
-app.get('/wycieczka', (req, res) => {
+app.get('/wycieczka', async (req, res) => {
   const id = checkTripId(req, res);
+  const trip = await getAvailableTrip(id);
+  if (trip === null) {
+    res.status(404).send('Wrong trip ID.');
+  }
   
-  res.render('wycieczka', { trip: fullDescriptions[id] });
+  res.render('wycieczka', { trip: trip });
 })
 
-app.get('/form', (req, res) => {
+app.get('/form', async (req, res) => {
   const id = checkTripId(req, res);
+  const trip = await getAvailableTrip(id);
+  if (trip === null) {
+    res.status(404).send('Wrong trip ID.');
+  }
 
-  res.render('form', { trip: trips[id] });
+  res.render('form', { trip: trip });
 })
 
 app.listen(port, () => {
