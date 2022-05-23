@@ -1,0 +1,18 @@
+extends layout.pug
+
+block scripts
+  link(rel='stylesheet' href='style-index.css' type='text/css')
+  link(rel='stylesheet' href='style-form.css' type='text/css')
+  script(defer='' src='validate-form.js')
+
+block content
+  #form-container
+    h2 Sukces!
+    p#sukces-info Udało ci się wykupić miejsca (#{places}) na wycieczkę #{trip.name}. Udanej podróży!
+    a.powrot-left(href=`/wycieczka?wycieczkaId=${trip.id}`) Powrót
+    a.powrot-right(href='/index?grupa=0') Menu
+    div.clear-float
+
+block invisible
+  script.
+    document.getElementsByClassName('header-opcja')[2].style.color = '#09008d';

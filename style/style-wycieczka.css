@@ -67,39 +67,46 @@ footer
   margin-left: -20px
 }
 
-#powrot-div
+#powrot
 {
-  width: 120px;
-  padding: 10px;
   float: left;
-  border-style: solid;
-  margin-bottom: 10px;
-}
-
-#zarezerwuj-div
-{
-  width: 120px;
-  padding: 10px;
-  float: right;
-  border-style: solid;
-  margin-bottom: 10px;
-}
-
-#powrot-div:hover
-{
-  background-color: #fff78c;
-}
-
-#zarezerwuj-div:hover
-{
-  background-color: #fff78c;
-}
-
-.link-wycieczka
-{
   text-decoration: none;
-  color: inherit;
-  display: block;
+  text-align: center;
+  font-size: 18px;
+  color: black;
+  width: 140px;
+  height: 38px;
+  border: solid;
+  border-color: black;
+  border-radius: 7px;
+  padding-top: 12px;
+  margin-bottom: 20px;
+}
+
+#powrot:hover
+{
+  background-color: yellow;
+}
+
+#zarezerwuj
+{
+  float: right;
+  text-decoration: none;
+  text-align: center;
+  font-size: 18px;
+  color: black;
+  width: 140px;
+  height: 38px;
+  border: solid;
+  border-color: black;
+  border-radius: 7px;
+  padding-top: 12px;
+  margin-bottom: 20px;
+}
+
+#zarezerwuj:hover
+{
+  background-color: yellow;
 }
 
 #obrazek

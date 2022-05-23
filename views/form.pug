@@ -3,38 +3,31 @@ extends layout.pug
 block scripts
   link(rel='stylesheet' href='style-index.css' type='text/css')
   link(rel='stylesheet' href='style-form.css' type='text/css')
-  script(defer='' src='validate-form.js')
 
 block content
   #form-container
     h2 #{trip.name} - #{trip.price} zł
     #form-div
-      form#zakup-wycieczki(name='zakup-wycieczki' action='' method='post')
+      form#zakup-wycieczki(name=`zakup-wycieczki' action='/form?wycieczkaId=${trip.id}` method='post')
         label.dane-klienta
           input(type='text' name='imie')
           |           Imi&eogon;
-          span.form-komunikat  - jest wymagane
-          span.form-komunikat  - za d&lstrok;ugie
         label.dane-klienta
           input(type='text' name='nazwisko')
           |           Nazwisko
-          span.form-komunikat  - jest wymagane
-          span.form-komunikat  - za d&lstrok;ugie
         label.dane-klienta
           input(type='text' name='email')
           |           Email
-          span.form-komunikat  - jest wymagane
-          span.form-komunikat  - za d&lstrok;ugie
         label#ile-wycieczek-label
-          input(type='number' name='ile-wycieczek')
-          |           Ilo&sacute;&cacute;
+          input(type='number' name='zgloszenia')
+          |           Liczba zgłoszeń
         label
-          input(type='submit' value='Zamów')
+          input(type='submit' value='Zamów' id='zamow')
+        a.powrot-right(href=`/wycieczka?wycieczkaId=${trip.id}`) Powrót
+    #error-div
+      each error in errors
+        h2 #{error}
 
 block invisible
-  #okModal.modal
-    .modal-content
-      span.close Ok
-      p.modal-text
   script.
     document.getElementsByClassName('header-opcja')[2].style.color = '#09008d';

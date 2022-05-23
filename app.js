@@ -1,4 +1,7 @@
 import express from 'express';
+import { body, param, validationResult } from 'express-validator';
+import bodyParser from 'body-parser';
+
 const app = express();
 const port = 8080;
 
@@ -8,6 +11,13 @@ app.set('views', './views');
 app.use(express.static('style'));
 app.use(express.static('pictures'));
 app.use(express.static('js'));
+
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
 
 import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie } from './js/database.mjs';
 import { Op } from 'sequelize';
@@ -264,6 +274,14 @@ function checkGroup(req, res, groups) {
   return group;
 }
 
+app.get('/index', async (req, res) => {
+  const available_trips = await getAvailableTrips();
+  const groups = Math.max(Math.floor((available_trips.length + 2) / 3), 1);
+  const group = checkGroup(req, res, groups);
+  const trips_to_render = available_trips.slice(group * 3, group * 3 + 3);
+  res.render('index', { trips: trips_to_render, group: group, groups: groups });
+})
+
 function checkTripId(req, res) {
   if (req.query.wycieczkaId === undefined) {
     res.status(404).send('No trip ID.');
@@ -276,14 +294,6 @@ function checkTripId(req, res) {
 
   return id;
 }
-
-app.get('/index', async (req, res) => {
-  const available_trips = await getAvailableTrips();
-  const groups = Math.max(Math.floor((available_trips.length + 2) / 3), 1);
-  const group = checkGroup(req, res, groups);
-  const trips_to_render = available_trips.slice(group * 3, group * 3 + 3);
-  res.render('index', { trips: trips_to_render, group: group, groups: groups });
-})
 
 app.get('/wycieczka', async (req, res) => {
   const id = checkTripId(req, res);
@@ -302,8 +312,50 @@ app.get('/form', async (req, res) => {
     res.status(404).send('Wrong trip ID.');
   }
 
-  res.render('form', { trip: trip });
+  res.render('form', { trip: trip, errors: [] });
 })
+
+app.post('/form',
+  body('imie')
+    .notEmpty()
+    .withMessage('Imię jest wymagane. '),
+  body('nazwisko')
+    .notEmpty()
+    .withMessage('Nazwisko jest wymagane. '),
+  body('email')
+    .notEmpty()
+    .withMessage('Email jest wymagany. ')
+    .isEmail()
+    .withMessage('Niepoprawny email. '),
+  body('zgloszenia')
+    .notEmpty()
+    .withMessage('Liczba zgłoszeń jest wymagana. ')
+    .isInt({ min: 1 })
+    .withMessage('Niepoprawna liczba zgłoszeń. '),
+  async (req, res) => {
+    const errors = validationResult(req).array();
+    const id = checkTripId(req, res);
+    const trip = await getAvailableTrip(id);
+    if (trip === null) {
+      res.status(404).send('Wrong trip ID.');
+      return;
+    }
+    if (errors.length > 0) {
+      let errorMessages = [];
+      let lastWrongParam = '';
+      for (const error of errors.sort()) {
+        if (error.param.localeCompare(lastWrongParam) != 0) {
+          errorMessages.push(error.msg);
+          lastWrongParam = error.param;
+        }
+      }
+      res.render('form', { trip: trip, errors: errorMessages });
+    }
+    else {
+      res.render('form-sukces', { trip: trip , places: req.body.zgloszenia });
+    }
+  }
+)
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

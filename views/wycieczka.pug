@@ -24,10 +24,8 @@ block content
       li= trip.program1
       li= trip.program2
       li= trip.program3
-    #powrot-div
-      a.link-wycieczka(href=`/index?grupa=${Math.floor(trip.id / 3)}`) &lt; Powr&oacute;t
-    #zarezerwuj-div
-      a.link-wycieczka(href=`/form?wycieczkaId=${trip.id}`) Zarezerwuj &gt;
+    a#powrot(href=`/index?grupa=${Math.floor(trip.id / 3)}`) &lt; Powr&oacute;t
+    a#zarezerwuj(href=`/form?wycieczkaId=${trip.id}`) Zarezerwuj &gt;
 
 block invisible
   script.
