@@ -8,7 +8,7 @@ block content
   #form-container
     h2 #{trip.name} - #{trip.price} zł
     #form-div
-      form#zakup-wycieczki(name=`zakup-wycieczki' action='/form?wycieczkaId=${trip.id}` method='post')
+      form#zakup-wycieczki(name='zakup-wycieczki' action=`/form?wycieczkaId=${trip.id}` method='post')
         label.dane-klienta
           input(type='text' name='imie')
           |           Imi&eogon;

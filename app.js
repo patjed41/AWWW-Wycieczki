@@ -12,12 +12,12 @@ app.use(express.static('style'));
 app.use(express.static('pictures'));
 app.use(express.static('js'));
 
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(express.json());       // to support JSON-encoded bodies
-app.use(express.urlencoded({ extended: true })); // to support URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie } from './js/database.mjs';
 import { Op } from 'sequelize';
@@ -53,196 +53,6 @@ async function getAvailableTrip(id) {
 
   return trips[0];
 }
-
-const trip0 = {
-  id: 0,
-  name: 'Szczyt wszystkiego',
-  description: 'Krótka wycieczka z wejściem na ten właśnie szczyt.',
-  price: '15002900',
-  picture: 'szczyt-wszystkiego.jpg'
-}
-
-const trip1 = {
-  id: 1,
-  name: 'Dalekie morza',
-  description: 'Mórz jest wiele, więc i opis może być nieco dłuższy niż poprzednio. Atrakcji też może być więcej.',
-  price: '17',
-  picture: 'dalekie-morza.jpg'
-}
-
-const trip2 = {
-  id: 2,
-  name: 'Miasto',
-  description: 'Na świecie mamy jeszcze miasta, można je zwiedzać.',
-  price: '3405691582',
-  picture: 'city.jpeg'
-}
-
-const trip3 = {
-  id: 3,
-  name: 'Pustynia',
-  description: 'Niezapomniana przejażdżka wielbłądem po Saharze.',
-  price: '1234',
-  picture: 'pustynia.jpeg'
-}
-
-const trip4 = {
-  id: 4,
-  name: 'Rejs do okoła świata',
-  description: 'Wodaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.',
-  price: '891839',
-  picture: 'rejs.jpeg'
-}
-
-const trip5 = {
-  id: 5,
-  name: 'Wyprawa na Biegun Południowy',
-  description: 'Długa i mroźna przygoda po Antarktydzie.',
-  price: '10101',
-  picture: 'antarktyda.jpg'
-}
-
-const trip6 = {
-  id: 6,
-  name: 'Tratwą po Amazonii.',
-  description: 'Owady, węże, krokodyle i ukrop nie do zniesienia.',
-  price: '9182',
-  picture: 'amazonia.jpeg'
-}
-
-const trip7 = {
-  id: 6,
-  name: 'Lot w kosmos.',
-  description: 'Spędzenie niezapomnianej chwili na orbicie.',
-  price: '999999',
-  picture: 'orbita.webp'
-}
-
-const trips = [trip0, trip1, trip2, trip3, trip4, trip5, trip6, trip7];
-
-const tripDescription0 = {
-  id: 0,
-  picture: trip0.picture,
-  desc0: 'Fajna wycieczka w góry. Fajna wycieczka w góry. Fajna wycieczka w góry. Fajna wycieczka w góry. Fajna wycieczka w góry. Fajna wycieczka w góry. Fajna wycieczka w góry. Fajna wycieczka w góry.',
-  name: trip0.name,
-  desc1: 'Bardzo fajna wycieczka w góry. Bardzo fajna wycieczka w góry. Bardzo fajna wycieczka w góry. Bardzo fajna wycieczka w góry. Bardzo fajna wycieczka w góry. Bardzo fajna wycieczka w góry. Bardzo fajna wycieczka w góry.',
-  desc2: 'Najfajniejsza wycieczka w góry. Najfajniejsza wycieczka w góry. Najfajniejsza wycieczka w góry. Najfajniejsza wycieczka w góry. Najfajniejsza wycieczka w góry. Najfajniejsza wycieczka w góry. Najfajniejsza wycieczka w góry.',
-  additionalInfo: 'Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo. Będzie zimnooooo.',
-  time: 'zimą',
-  temperature: 'zero absolutne',
-  goodToTake: 'ciepłe ubranka',
-  price: trip0.price,
-  program: ['Wejście na szczyt.', 'Zejście ze szczytu.', 'Ogrzewanko przy piecyku.']
-}
-
-const tripDescription1 = {
-  id: 1,
-  picture: trip1.picture,
-  desc0: 'Fajna wycieczka nad morze. Fajna wycieczka nad morze. Fajna wycieczka nad morze. Fajna wycieczka nad morze. Fajna wycieczka nad morze. Fajna wycieczka nad morze. Fajna wycieczka nad morze. Fajna wycieczka nad morze.',
-  name: trip1.name,
-  desc1: 'Bardzo fajna wycieczka nad morze. Bardzo fajna wycieczka nad morze. Bardzo fajna wycieczka nad morze. Bardzo fajna wycieczka nad morze. Bardzo fajna wycieczka nad morze. Bardzo fajna wycieczka nad morze. Bardzo fajna wycieczka nad morze.',
-  desc2: 'Najfajniejsza wycieczka nad morze. Najfajniejsza wycieczka nad morze. Najfajniejsza wycieczka nad morze. Najfajniejsza wycieczka nad morze. Najfajniejsza wycieczka nad morze. Najfajniejsza wycieczka nad morze. Najfajniejsza wycieczka nad morze.',
-  additionalInfo: 'Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie zimnooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo. Będzie ciepłooooo.',
-  time: 'latem',
-  temperature: 'wysoka',
-  goodToTake: 'parawan',
-  price: trip1.price,
-  program: ['Plażing.', 'Leżing.', 'Relaksing.']
-}
-
-const tripDescription2 = {
-  id: 2,
-  picture: trip2.picture,
-  desc0: 'Fajna wycieczka do miasta. Fajna wycieczka do miasta. Fajna wycieczka do miasta. Fajna wycieczka do miasta. Fajna wycieczka do miasta. Fajna wycieczka do miasta. Fajna wycieczka do miasta. Fajna wycieczka do miasta.',
-  name: trip2.name,
-  desc1: 'Bardzo fajna wycieczka do miasta. Bardzo fajna wycieczka do miasta. Bardzo fajna wycieczka do miasta. Bardzo fajna wycieczka do miasta. Bardzo fajna wycieczka do miasta. Bardzo fajna wycieczka do miasta. Bardzo fajna wycieczka do miasta.',
-  desc2: 'Najfajniejsza wycieczka do miasta. Najfajniejsza wycieczka do miasta. Najfajniejsza wycieczka do miasta. Najfajniejsza wycieczka do miasta. Najfajniejsza wycieczka do miasta. Najfajniejsza wycieczka do miasta. Najfajniejsza wycieczka do miasta.',
-  additionalInfo: 'Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo. Będzie głośnoooo.',
-  time: 'latem',
-  temperature: 'średnia',
-  goodToTake: 'aparat',
-  price: trip2.price,
-  program: ['Zwiedzenia tego.', 'Zwiedzanie tamtego.', 'Zwiedzanie tego i owego.', 'Kupowanie pamiątek.']
-}
-
-const tripDescription3 = {
-  id: 3,
-  picture: trip3.picture,
-  desc0: 'Fajna wycieczka po pustyni. Fajna wycieczka po pustyni. Fajna wycieczka po pustyni. Fajna wycieczka po pustyni. Fajna wycieczka po pustyni. Fajna wycieczka po pustyni. Fajna wycieczka po pustyni. Fajna wycieczka po pustyni.',
-  name: trip3.name,
-  desc1: 'Bardzo fajna wycieczka po pustyni. Bardzo fajna wycieczka po pustyni. Bardzo fajna wycieczka po pustyni. Bardzo fajna wycieczka po pustyni. Bardzo fajna wycieczka po pustyni. Bardzo fajna wycieczka po pustyni. Bardzo fajna wycieczka po pustyni.',
-  desc2: 'Najfajniejsza wycieczka po pustyni. Najfajniejsza wycieczka po pustyni. Najfajniejsza wycieczka po pustyni. Najfajniejsza wycieczka po pustyni. Najfajniejsza wycieczka po pustyni. Najfajniejsza wycieczka po pustyni. Najfajniejsza wycieczka po pustyni.',
-  additionalInfo: 'Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo. Będzie gorącooooo.',
-  time: '21.07.2022',
-  temperature: 'gorąco w dzień, zimno w nocy',
-  goodToTake: 'wodę',
-  price: trip3.price,
-  program: ['Podziwianie piachu.', 'Podziwianie wydm.', 'Podziwianie piramid.']
-}
-
-const tripDescription4 = {
-  id: 4,
-  picture: trip4.picture,
-  desc0: 'Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie. Fajny rejs po oceanie.',
-  name: trip4.name,
-  desc1: 'Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie. Bardzo fajny rejs po oceanie.',
-  desc2: 'Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie. Najfajniejszy rejs po oceanie.',
-  additionalInfo: 'Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno.',
-  time: '25.07-23.08 2022',
-  temperature: 'w sam raz',
-  goodToTake: 'aparat',
-  price: trip4.price,
-  program: ['Rejs 1.', 'Rejs 2.', 'Rejs 3.', 'Rejs 4.']
-}
-
-const tripDescription5 = {
-  id: 5,
-  picture: trip5.picture,
-  desc0: 'Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu. Fajny marsz po śniegu.',
-  name: trip5.name,
-  desc1: 'Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu. Bardzo fajny marsz po śniegu.',
-  desc2: 'Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu. Najfajniejszy marsz po śniegu.',
-  additionalInfo: 'Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno. Będzie wilgotno.',
-  time: 'jesienią',
-  temperature: 'dużo na minusie',
-  goodToTake: 'tak dużo rzeczy, że nie warto pisać',
-  price: trip5.price,
-  program: ['Śnieg.', 'Śnieg.', 'Biegun.', 'Śnieg', 'Śnieg']
-}
-
-const tripDescription6 = {
-  id: 6,
-  picture: trip6.picture,
-  desc0: 'Fajne płynięcie tratwą. Fajne płynięcie tratwą. Fajne płynięcie tratwą. Fajne płynięcie tratwą. Fajne płynięcie tratwą. Fajne płynięcie tratwą. Fajne płynięcie tratwą. Fajne płynięcie tratwą.',
-  name: trip6.name,
-  desc1: 'Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą. Bardzo fajne płynięcie tratwą.',
-  desc2: 'Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą. Najfajniejsze płynięcie tratwą.',
-  additionalInfo: 'Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie. Będzie niebezpiecznie.',
-  time: 'pojutrze',
-  temperature: '32 stopnie',
-  goodToTake: 'wiosła',
-  price: trip6.price,
-  program: ['Uciekanie przed krokodylami.', 'Uciekanie przed wężami.', 'Uciekanie przed wszystkim.']
-}
-
-const tripDescription7 = {
-  id: 7,
-  picture: trip7.picture,
-  desc0: 'Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos. Fajny lot w kosmos.',
-  name: trip7.name,
-  desc1: 'Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos. Bardzo fajny lot w kosmos.',
-  desc2: 'Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. Najfajniejszy lot w kosmos. ',
-  additionalInfo: 'Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. Będzie kosmicznie. ',
-  time: 'w dalekiej przyszłości',
-  temperature: 'kto wie jaka jest temperatura w kosmosie?',
-  goodToTake: 'skafander',
-  price: trip7.price,
-  program: ['Wylot.', 'Lot.', 'Przylot']
-}
-
-const fullDescriptions = [tripDescription0, tripDescription1, tripDescription2, tripDescription3, tripDescription4, tripDescription5, tripDescription6, tripDescription7];
-
-const groups = Math.max(Math.floor((trips.length + 2) / 3), 1);
 
 app.use((req, res, next) => {
   var todayDate = new Date().toISOString().slice(0, 10);
@@ -315,6 +125,49 @@ app.get('/form', async (req, res) => {
   res.render('form', { trip: trip, errors: [] });
 })
 
+async function addApplicationToDatabase(id, name, surname, email, places) {
+  try {
+    const result = await database.transaction(async (t) => {
+      const trips = await Wycieczka.findAll({
+        where: {
+          end_date: {
+            [Op.gt]: "2022-01-02T00:00:00.000Z"
+          },
+          id: id
+        },
+        transaction: t,
+        lock: true
+      });
+      if (trips.length == 0 || trips[0].places_left < places) {
+        return false;
+      }
+
+      await trips[0].decrement('places_left', {
+        by: places,
+        transaction: t,
+        lock: true
+      });
+  
+      await Zgloszenie.create({
+        name: name,
+        surname: surname,
+        email: email,
+        places: places,
+        WycieczkaId: id
+      }, {
+        transaction: t,
+        lock: true
+      });
+
+      return true;
+    });
+
+    return result;
+  } catch (error) {
+    return false;
+  }
+}
+
 app.post('/form',
   body('imie')
     .notEmpty()
@@ -351,8 +204,13 @@ app.post('/form',
       }
       res.render('form', { trip: trip, errors: errorMessages });
     }
-    else {
+
+    const added = await addApplicationToDatabase(id, req.body.imie, req.body.nazwisko, req.body.email, req.body.zgloszenia);
+    if (added) {
       res.render('form-sukces', { trip: trip , places: req.body.zgloszenia });
+    }
+    else {
+      res.render('form', { trip: trip, errors: [ 'Application failed.' ] });
     }
   }
 )
