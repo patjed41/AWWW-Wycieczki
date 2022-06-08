@@ -6,24 +6,19 @@ block scripts
 
 block content
   #form-container
-    h2 #{trip.name} - #{trip.price} zł
-    #form-div
-      form#zakup-wycieczki(name='zakup-wycieczki' action=`/form?wycieczkaId=${trip.id}` method='post')
-        label.dane-klienta
-          input(type='text' name='imie')
-          |           Imi&eogon;
-        label.dane-klienta
-          input(type='text' name='nazwisko')
-          |           Nazwisko
-        label.dane-klienta
-          input(type='text' name='email')
-          |           Email
-        label#ile-wycieczek-label
-          input(type='number' name='zgloszenia')
-          |           Liczba zgłoszeń
-        label
-          input(type='submit' value='Zamów' id='zamow')
-        a.powrot-right(href=`/wycieczka?wycieczkaId=${trip.id}`) Powrót
+    - if (!logged)
+      h2 Zaloguj się.
+      a.powrot-left(href=`/wycieczka?wycieczkaId=${trip.id}`) Powrót
+    - else
+      h2 #{trip.name} - #{trip.price} zł
+      #form-div
+        form#zakup-wycieczki(name='zakup-wycieczki' action=`/form?wycieczkaId=${trip.id}` method='post')
+          label#ile-wycieczek-label
+            input(type='number' name='zgloszenia')
+            |           Liczba zgłoszeń
+          label
+            input(type='submit' value='Zamów' id='zamow')
+          a.powrot-right(href=`/wycieczka?wycieczkaId=${trip.id}`) Powrót
     #error-div
       each error in errors
         h2 #{error}

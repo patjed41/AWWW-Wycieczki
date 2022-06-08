@@ -26,8 +26,7 @@ import session from 'express-session';
 app.use(session({
   secret: 'secret wycieczka',
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: true }
+  saveUninitialized: true
 }));
 
 import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie, User } from './js/database.mjs';
@@ -132,11 +131,15 @@ app.get('/form', async (req, res) => {
   if (trip === null) {
     res.status(404).send('Wrong trip ID.');
   }
-
-  res.render('form', { trip: trip, errors: [] });
+  else if (req.session.email === undefined) {
+    res.render('form', { logged: false, trip: trip, errors: [] });
+  }
+  else {
+    res.render('form', { logged: true, trip: trip, errors: [] });
+  }
 })
 
-async function addApplicationToDatabase(id, name, surname, email, places) {
+async function addReservationToDatabase(wycieczkaId, userId, name, surname, email, places) {
   try {
     const result = await database.transaction(async (t) => {
       const trips = await Wycieczka.findAll({
@@ -144,7 +147,7 @@ async function addApplicationToDatabase(id, name, surname, email, places) {
           end_date: {
             [Op.gt]: "2022-01-02T00:00:00.000Z"
           },
-          id: id
+          id: wycieczkaId
         },
         transaction: t,
         lock: true
@@ -158,13 +161,15 @@ async function addApplicationToDatabase(id, name, surname, email, places) {
         transaction: t,
         lock: true
       });
-  
+      console.log(userId);
+
       await Zgloszenie.create({
         name: name,
         surname: surname,
         email: email,
         places: places,
-        WycieczkaId: id
+        WycieczkaId: wycieczkaId,
+        UserId: userId
       }, {
         transaction: t,
         lock: true
@@ -200,7 +205,7 @@ async function addUserToDatabase(name, surname, email, password) {
   }
 }
 
-async function validateLogIn(email, password) {
+async function getUser(email, password) {
   try {
     const result = await database.transaction(async (t) => {
       const users = await User.findAll({
@@ -211,12 +216,47 @@ async function validateLogIn(email, password) {
         lock: true
       });
 
-      return users.length == 1 && bcrypt.compareSync(password, users[0].password);
+      if (users.length != 1 || (password !== null && !bcrypt.compareSync(password, users[0].password))) {
+        return undefined;
+      }
+      return users[0];
     });
 
     return result;
   } catch (error) {
-    return false;
+    return undefined;
+  }
+}
+
+async function getReservationsOfUser(email) {
+  try {
+    const result = await database.transaction(async (t) => {
+      const reservations = await Zgloszenie.findAll({
+        where: {
+          email: email
+        },
+        transaction: t,
+        lock: true
+      });
+
+      let resWithTrips = [];
+      for (const res of reservations) {
+        const trips = await Wycieczka.findAll({
+          where: {
+            id: res.WycieczkaId
+          },
+          transaction: t,
+        });
+        console.log(trips[0].name);
+        resWithTrips.push({ wycieczka: trips[0].name, places: res.places });
+      }
+
+      return resWithTrips;
+    });
+
+    return result;
+  } catch (error) {
+    return [];
   }
 }
 
@@ -233,17 +273,6 @@ function parseErrorsToArray(errors) {
 }
 
 app.post('/form',
-  body('imie')
-    .notEmpty()
-    .withMessage('Imię jest wymagane. '),
-  body('nazwisko')
-    .notEmpty()
-    .withMessage('Nazwisko jest wymagane. '),
-  body('email')
-    .notEmpty()
-    .withMessage('Email jest wymagany. ')
-    .isEmail()
-    .withMessage('Niepoprawny email. '),
   body('zgloszenia')
     .notEmpty()
     .withMessage('Liczba zgłoszeń jest wymagana. ')
@@ -261,20 +290,29 @@ app.post('/form',
       const errorMessages = parseErrorsToArray(errors);
       res.render('form', { trip: trip, errors: errorMessages });
     }
+    else if (req.session.email === undefined) {
+      res.render('form', { logged: false, trip: trip, errors: [] });
+    }
     else {
-      const added = await addApplicationToDatabase(id, req.body.imie, req.body.nazwisko, req.body.email, req.body.zgloszenia);
+      const user = await getUser(req.session.email, null);
+      const added = await addReservationToDatabase(id, user.id, user.name, user.surname, user.email, req.body.zgloszenia);
       if (added) {
         res.render('form-sukces', { trip: trip , places: req.body.zgloszenia });
       }
       else {
-        res.render('form', { trip: trip, errors: [ 'Rezerwacja się nie powiodła. ' ] });
+        res.render('form', { logged: true, trip: trip, errors: [ 'Rezerwacja się nie powiodła. ' ] });
       }
     }
   }
 )
 
-app.get('/rejestracja', async (req, res) => {
-  res.render('rejestracja', { errors: [] });
+app.get('/rejestracja', (req, res) => {
+  if (req.session.email === undefined) {
+    res.render('rejestracja', { errors: [] });
+  }
+  else {
+    res.redirect('/index?grupa=0');
+  }
 })
 
 app.post('/rejestracja',
@@ -307,6 +345,7 @@ app.post('/rejestracja',
     else {
       const added = await addUserToDatabase(req.body.imie, req.body.nazwisko, req.body.email, req.body.haslo);
       if (added) {
+        req.session.email = req.body.email;
         res.render('rejestracja-sukces');
       }
       else {
@@ -316,8 +355,13 @@ app.post('/rejestracja',
   }
 )
 
-app.get('/login', async (req, res) => {
-  res.render('login', { errors: [] });
+app.get('/login', (req, res) => {
+  if (req.session.email === undefined) {
+    res.render('login', { errors: [] });
+  }
+  else {
+    res.redirect('/index?grupa=0');
+  }
 })
 
 app.post('/login',
@@ -336,17 +380,32 @@ app.post('/login',
       res.render('login', { errors: errorMessages });
     }
     else {
-      const properUser = await validateLogIn(req.body.email, req.body.haslo);
-      if (properUser) {
-        req.session.email = req.body.email;
-        res.render('login-sukces');
+      const user = await getUser(req.body.email, req.body.haslo);
+      if (user !== undefined) {
+        req.session.email = user.email;
+        res.render('user', { logged: true, reservations: await getReservationsOfUser(req.session.email) });
       }
       else {
+        req.session.email = undefined;
         res.render('login', { errors: [ 'Niepoprawna para email-hasło. ' ] });
       }
     }
   }
 )
+
+app.get('/logout', (req, res) => {
+  req.session.email = undefined;
+  res.redirect('/index?grupa=0');
+})
+
+app.get('/user', async (req, res) => {
+  if (req.session.email === undefined) {
+    res.render('user', { logged: false });
+  }
+  else {
+    res.render('user', { logged: true, reservations: await getReservationsOfUser(req.session.email) });
+  }
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

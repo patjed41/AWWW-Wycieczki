@@ -1,0 +1,25 @@
+extends layout.pug
+
+block scripts
+  link(rel='stylesheet' href='style-index.css' type='text/css')
+  link(rel='stylesheet' href='style-form.css' type='text/css')
+  script(defer='' src='validate-form.js')
+
+block content
+  #form-container
+    - if (!logged)
+      h2 Zaloguj się.
+    - else
+      h2 Witamy.
+      h3 Twoje rezerwacje:
+      ol
+        each res in reservations
+          li Wycieczka: #{res.wycieczka}, miejsca: #{res.places}
+
+    a.powrot-left(href='/index?grupa=0') Menu
+    a.powrot-right(href='/logout' method="post") Wyloguj
+    div.clear-float
+
+block invisible
+  script.
+    document.getElementsByClassName('header-opcja')[5].style.color = '#09008d';
