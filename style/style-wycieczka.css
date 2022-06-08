@@ -114,3 +114,14 @@ footer
   margin-right: 40px;
   margin-bottom: 20px;
 }
+
+.header-opcja
+{
+  text-decoration: none;
+  color: black;
+}
+
+.header-opcja:hover
+{
+  color: purple;
+}

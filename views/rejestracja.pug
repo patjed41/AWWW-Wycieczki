@@ -1,0 +1,36 @@
+extends layout.pug
+
+block scripts
+  link(rel='stylesheet' href='style-index.css' type='text/css')
+  link(rel='stylesheet' href='style-form.css' type='text/css')
+
+block content
+  #form-container
+    h2 Rejestracja
+    #form-div
+      form#rejestracja-form(name='rejestracja' action='/rejestracja' method='post')
+        label.dane-klienta
+          input(type='text' name='imie')
+          |           Imi&eogon;
+        label.dane-klienta
+          input(type='text' name='nazwisko')
+          |           Nazwisko
+        label.dane-klienta
+          input(type='text' name='email')
+          |           Email
+        label.dane-klienta
+          input(type='password' name='haslo')
+          |           Hasło
+        label.dane-klienta
+          input(type='password' name='haslo2')
+          |           Powtórz hasło
+        label
+          input(type='submit' value='Potwierdź' id='rejestruj')
+        a.powrot-right(href='/index?grupa=0') Powrót
+    #error-div
+      each error in errors
+        h2 #{error}
+
+block invisible
+  script.
+    document.getElementsByClassName('header-opcja')[3].style.color = '#09008d';

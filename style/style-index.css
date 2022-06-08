@@ -245,3 +245,14 @@ footer
 {
   background-color: #dbdbdb;
 }
+
+.header-opcja
+{
+  text-decoration: none;
+  color: black;
+}
+
+.header-opcja:hover
+{
+  color: purple;
+}

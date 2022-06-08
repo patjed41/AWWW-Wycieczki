@@ -1,0 +1,27 @@
+extends layout.pug
+
+block scripts
+  link(rel='stylesheet' href='style-index.css' type='text/css')
+  link(rel='stylesheet' href='style-form.css' type='text/css')
+
+block content
+  #form-container
+    h2 Logowanie
+    #form-div
+      form#logowanie-form(name='logowanie' action='/login' method='post')
+        label.dane-klienta
+          input(type='text' name='email')
+          |           Email
+        label.dane-klienta
+          input(type='password' name='haslo')
+          |           Hasło
+        label
+          input(type='submit' value='Potwierdź' id='rejestruj')
+        a.powrot-right(href='/index?grupa=0') Powrót
+    #error-div
+      each error in errors
+        h2 #{error}
+
+block invisible
+  script.
+    document.getElementsByClassName('header-opcja')[4].style.color = '#09008d';

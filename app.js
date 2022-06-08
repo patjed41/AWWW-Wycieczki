@@ -19,7 +19,18 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie } from './js/database.mjs';
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
+
+import session from 'express-session';
+app.use(session({
+  secret: 'secret wycieczka',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
+import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie, User } from './js/database.mjs';
 import { Op } from 'sequelize';
 
 await checkConnectionWithDatabase();
@@ -168,6 +179,59 @@ async function addApplicationToDatabase(id, name, surname, email, places) {
   }
 }
 
+async function addUserToDatabase(name, surname, email, password) {
+  try {
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    await database.transaction(async (t) => {
+      await User.create({
+        name: name,
+        surname: surname,
+        email: email,
+        password: hashedPassword
+      }, {
+        transaction: t,
+        lock: true
+      });
+    });
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+async function validateLogIn(email, password) {
+  try {
+    const result = await database.transaction(async (t) => {
+      const users = await User.findAll({
+        where: {
+          email: email
+        },
+        transaction: t,
+        lock: true
+      });
+
+      return users.length == 1 && bcrypt.compareSync(password, users[0].password);
+    });
+
+    return result;
+  } catch (error) {
+    return false;
+  }
+}
+
+function parseErrorsToArray(errors) {
+  let errorMessages = [];
+  let lastWrongParam = '';
+  for (const error of errors.sort()) {
+    if (error.param.localeCompare(lastWrongParam) != 0) {
+      errorMessages.push(error.msg);
+      lastWrongParam = error.param;
+    }
+  }
+  return errorMessages;
+}
+
 app.post('/form',
   body('imie')
     .notEmpty()
@@ -194,23 +258,92 @@ app.post('/form',
       return;
     }
     if (errors.length > 0) {
-      let errorMessages = [];
-      let lastWrongParam = '';
-      for (const error of errors.sort()) {
-        if (error.param.localeCompare(lastWrongParam) != 0) {
-          errorMessages.push(error.msg);
-          lastWrongParam = error.param;
-        }
-      }
+      const errorMessages = parseErrorsToArray(errors);
       res.render('form', { trip: trip, errors: errorMessages });
     }
+    else {
+      const added = await addApplicationToDatabase(id, req.body.imie, req.body.nazwisko, req.body.email, req.body.zgloszenia);
+      if (added) {
+        res.render('form-sukces', { trip: trip , places: req.body.zgloszenia });
+      }
+      else {
+        res.render('form', { trip: trip, errors: [ 'Rezerwacja się nie powiodła. ' ] });
+      }
+    }
+  }
+)
 
-    const added = await addApplicationToDatabase(id, req.body.imie, req.body.nazwisko, req.body.email, req.body.zgloszenia);
-    if (added) {
-      res.render('form-sukces', { trip: trip , places: req.body.zgloszenia });
+app.get('/rejestracja', async (req, res) => {
+  res.render('rejestracja', { errors: [] });
+})
+
+app.post('/rejestracja',
+  body('imie')
+    .notEmpty()
+    .withMessage('Imię jest wymagane. '),
+  body('nazwisko')
+    .notEmpty()
+    .withMessage('Nazwisko jest wymagane. '),
+  body('email')
+    .notEmpty()
+    .withMessage('Email jest wymagany. ')
+    .isEmail()
+    .withMessage('Niepoprawny email. '),
+  body('haslo')
+    .notEmpty()
+    .withMessage('Hasło jest wymagane. '),
+  body('haslo2').custom((value, { req }) => {
+    if (value !== req.body.haslo) {
+      throw new Error('Hasła się różnią. ');
+    }
+    return true;
+  }),
+  async (req, res) => {
+    const errors = validationResult(req).array();
+    if (errors.length > 0) {
+      const errorMessages = parseErrorsToArray(errors);
+      res.render('rejestracja', { errors: errorMessages });
     }
     else {
-      res.render('form', { trip: trip, errors: [ 'Application failed.' ] });
+      const added = await addUserToDatabase(req.body.imie, req.body.nazwisko, req.body.email, req.body.haslo);
+      if (added) {
+        res.render('rejestracja-sukces');
+      }
+      else {
+        res.render('rejestracja', { errors: [ 'Email jest już w użyciu. ' ] });
+      }
+    }
+  }
+)
+
+app.get('/login', async (req, res) => {
+  res.render('login', { errors: [] });
+})
+
+app.post('/login',
+  body('email')
+    .notEmpty()
+    .withMessage('Email jest wymagany. ')
+    .isEmail()
+    .withMessage('Niepoprawny email. '),
+  body('haslo')
+    .notEmpty()
+    .withMessage('Hasło jest wymagane. '),
+  async (req, res) => {
+    const errors = validationResult(req).array();
+    if (errors.length > 0) {
+      const errorMessages = parseErrorsToArray(errors);
+      res.render('login', { errors: errorMessages });
+    }
+    else {
+      const properUser = await validateLogIn(req.body.email, req.body.haslo);
+      if (properUser) {
+        req.session.email = req.body.email;
+        res.render('login-sukces');
+      }
+      else {
+        res.render('login', { errors: [ 'Niepoprawna para email-hasło. ' ] });
+      }
     }
   }
 )

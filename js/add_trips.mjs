@@ -1,4 +1,4 @@
-const { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie } = await import('./database.mjs');
+const { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie, User } = await import('./database.mjs');
 const { Op } = await import('sequelize');
 
 await checkConnectionWithDatabase();
@@ -13,6 +13,12 @@ await Wycieczka.destroy({
   truncate: true
 }).catch(err => {
   console.log('Tabela Wycieczki nie istnieje.');
+});
+
+await User.destroy({
+  truncate: true
+}).catch(err => {
+  console.log('Tabela Users nie istnieje.');
 });
 
 await database.sync({ force: true });
