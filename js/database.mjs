@@ -1,6 +1,21 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-const database = new Sequelize('postgres://pj429285:iks@localhost:5432/bd');
+// const database = new Sequelize('postgres://pj429285:iks@localhost:5432/bd');
+var database = new Sequelize(
+  "db",
+  process.env.USER,
+  process.env.PASSWORD,
+  {
+    host: "0.0.0.0",
+    dialect: "sqlite",
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 10000
+    },
+    storage: "db.sqlite"
+  }
+);
 
 const Wycieczka = database.define('Wycieczka', {
   name: {
@@ -144,12 +159,9 @@ Zgloszenie.belongsTo(User);
 
 async function checkConnectionWithDatabase() {
   await database.authenticate().then(() => {
-    console.log('Nawiązuję połączenie z bazą...');
+    console.log('Connecting to database...');
   }).catch(err => {
-    console.log('Nie udało się.');
-    throw "Nie udało się.";
-  }).then(() => {
-    console.log('Udało się.');
+    throw "Connecting to database failed.";
   });
 }
 

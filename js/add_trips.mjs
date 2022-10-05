@@ -174,13 +174,3 @@ const wycieczka7 = await Wycieczka.create({
   program3: 'Przylot.',
   places_left: 8
 });
-
-/*const wycieczki = await Wycieczka.findAll({
-  where: {
-    end_date: {
-      [Op.gt]: "2022-01-02T00:00:00.000Z"
-    }
-  }
-});
-
-export { wycieczki };*/

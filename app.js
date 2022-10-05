@@ -408,5 +408,12 @@ app.get('/user', async (req, res) => {
 })
 
 app.listen(port, () => {
+  database.getQueryInterface().showAllSchemas().then((tableObj) => {
+    console.log('// Tables in database','==========================');
+    console.log(tableObj);
+  })
+  .catch((err) => {
+    console.log('showAllSchemas ERROR',err);
+  });
   console.log(`Example app listening on port ${port}`);
 })
