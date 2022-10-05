@@ -19,9 +19,6 @@ app.use(bodyParser.urlencoded({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-import bcrypt from 'bcrypt';
-const saltRounds = 10;
-
 import session from 'express-session';
 app.use(session({
   secret: 'secret wycieczka',
@@ -29,40 +26,14 @@ app.use(session({
   saveUninitialized: true
 }));
 
-import { database, checkConnectionWithDatabase, Wycieczka, Zgloszenie, User } from './js/database.mjs';
-import { Op } from 'sequelize';
+import { checkConnectionWithDatabase } from './js/database.mjs';
+
+import { getAvailableTrips, getAvailableTrip, addReservationToDatabase, addUserToDatabase,
+  getUser, getReservationsOfUser } from './js/db_helpers.js';
+
+import { checkGroup, checkTripId, parseErrorsToArray } from './js/helpers.js';
 
 await checkConnectionWithDatabase();
-
-async function getAvailableTrips() {
-  const trips = await Wycieczka.findAll({
-    where: {
-      end_date: {
-        [Op.gt]: "2022-01-02T00:00:00.000Z"
-      }
-    },
-    order: ['begin_date']
-  });
-
-  return trips;
-}
-
-async function getAvailableTrip(id) {
-  const trips = await Wycieczka.findAll({
-    where: {
-      end_date: {
-        [Op.gt]: "2022-01-02T00:00:00.000Z"
-      },
-      id: id
-    }
-  });
-
-  if (trips.length == 0) {
-    return null;
-  }
-
-  return trips[0];
-}
 
 app.use((req, res, next) => {
   var todayDate = new Date().toISOString().slice(0, 10);
@@ -81,19 +52,6 @@ app.get('/data', (req, res) => {
   res.status(200).send(res.locals.dateInfo);
 })
 
-function checkGroup(req, res, groups) {
-  if (req.query.grupa === undefined) {
-    res.status(404).send('No trip group.');
-  }
-
-  const group = parseInt(req.query.grupa);
-  if (group < 0 || group >= groups) {
-    res.status(404).send('Wrong trip group.');
-  }
-
-  return group;
-}
-
 app.get('/index', async (req, res) => {
   const available_trips = await getAvailableTrips();
   const groups = Math.max(Math.floor((available_trips.length + 2) / 3), 1);
@@ -101,19 +59,6 @@ app.get('/index', async (req, res) => {
   const trips_to_render = available_trips.slice(group * 3, group * 3 + 3);
   res.render('index', { trips: trips_to_render, group: group, groups: groups });
 })
-
-function checkTripId(req, res) {
-  if (req.query.wycieczkaId === undefined) {
-    res.status(404).send('No trip ID.');
-  }
-
-  const id = parseInt(req.query.wycieczkaId);
-  if (id <= 0) {
-    res.status(404).send('Wrong trip ID.');
-  }
-
-  return id;
-}
 
 app.get('/wycieczka', async (req, res) => {
   const id = checkTripId(req, res);
@@ -138,139 +83,6 @@ app.get('/form', async (req, res) => {
     res.render('form', { logged: true, trip: trip, errors: [] });
   }
 })
-
-async function addReservationToDatabase(wycieczkaId, userId, name, surname, email, places) {
-  try {
-    const result = await database.transaction(async (t) => {
-      const trips = await Wycieczka.findAll({
-        where: {
-          end_date: {
-            [Op.gt]: "2022-01-02T00:00:00.000Z"
-          },
-          id: wycieczkaId
-        },
-        transaction: t,
-        lock: true
-      });
-      if (trips.length == 0 || trips[0].places_left < places) {
-        return false;
-      }
-
-      await trips[0].decrement('places_left', {
-        by: places,
-        transaction: t,
-        lock: true
-      });
-      console.log(userId);
-
-      await Zgloszenie.create({
-        name: name,
-        surname: surname,
-        email: email,
-        places: places,
-        WycieczkaId: wycieczkaId,
-        UserId: userId
-      }, {
-        transaction: t,
-        lock: true
-      });
-
-      return true;
-    });
-
-    return result;
-  } catch (error) {
-    return false;
-  }
-}
-
-async function addUserToDatabase(name, surname, email, password) {
-  try {
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    await database.transaction(async (t) => {
-      await User.create({
-        name: name,
-        surname: surname,
-        email: email,
-        password: hashedPassword
-      }, {
-        transaction: t,
-        lock: true
-      });
-    });
-
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-async function getUser(email, password) {
-  try {
-    const result = await database.transaction(async (t) => {
-      const users = await User.findAll({
-        where: {
-          email: email
-        },
-        transaction: t,
-        lock: true
-      });
-
-      if (users.length != 1 || (password !== null && !bcrypt.compareSync(password, users[0].password))) {
-        return undefined;
-      }
-      return users[0];
-    });
-
-    return result;
-  } catch (error) {
-    return undefined;
-  }
-}
-
-async function getReservationsOfUser(email) {
-  try {
-    const result = await database.transaction(async (t) => {
-      const reservations = await Zgloszenie.findAll({
-        where: {
-          email: email
-        },
-        transaction: t,
-        lock: true
-      });
-
-      let resWithTrips = [];
-      for (const res of reservations) {
-        const trips = await Wycieczka.findAll({
-          where: {
-            id: res.WycieczkaId
-          },
-          transaction: t,
-        });
-        console.log(trips[0].name);
-        resWithTrips.push({ wycieczka: trips[0].name, places: res.places });
-      }
-
-      return resWithTrips;
-    });
-
-    return result;
-  } catch (error) {
-    return [];
-  }
-}
-
-function parseErrorsToArray(errors) {
-  let errorMessages = [];
-  let lastWrongParam = '';
-  for (const error of errors.sort()) {
-    if (error.param.localeCompare(lastWrongParam) != 0) {
-      errorMessages.push(error.msg);
-      lastWrongParam = error.param;
-    }
-  }
-  return errorMessages;
-}
 
 app.post('/form',
   body('zgloszenia')
@@ -408,12 +220,5 @@ app.get('/user', async (req, res) => {
 })
 
 app.listen(port, () => {
-  database.getQueryInterface().showAllSchemas().then((tableObj) => {
-    console.log('// Tables in database','==========================');
-    console.log(tableObj);
-  })
-  .catch((err) => {
-    console.log('showAllSchemas ERROR',err);
-  });
-  console.log(`Example app listening on port ${port}`);
+  console.log(`App listening on port ${port}`);
 })

@@ -10,12 +10,12 @@
     "sequelize": "^6.20.0",
     "sqlite3": "^5.1.2"
   },
-  "name": "lab7",
+  "name": "wycieczki",
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "db-init": "node js/database.mjs"
+    "db-init": "node js/add_trips.js"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
